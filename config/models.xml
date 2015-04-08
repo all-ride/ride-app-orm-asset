@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<models>
+    <model name="Asset" modelClass="ride\application\orm\asset\model\AssetModel" entryClass="ride\application\orm\asset\entry\AssetEntry">
+        <field name="folder" model="AssetFolder" relation="belongsTo">
+        </field>
+        <field name="name" type="string" localized="true">
+            <option name="label.name" value="label.name" />
+            <validation name="required" />
+        </field>
+        <field name="description" type="wysiwyg" localized="true">
+            <option name="label.name" value="label.description" />
+        </field>
+        <field name="type" type="string">
+            <validation name="required" />
+        </field>
+        <field name="source" type="string" />
+        <field name="value" type="string">
+            <validation name="required" />
+        </field>
+        <field name="embedUrl" type="website" />
+        <field name="thumbnail" type="image" />
+        <field name="orderIndex" type="integer" />
+        <field name="slug" type="string" unique="true" localized="true" />
+
+        <format name="title">{name}</format>
+        <format name="teaser">{type}: {value}</format>
+        <format name="image">{thumbnail}</format>
+
+        <option name="behaviour.date" value="true" />
+        <option name="behaviour.log" value="true" />
+        <option name="behaviour.slug" value="name" />
+        <option name="behaviour.owner" value="true" />
+        <option name="behaviour.version" value="true" />
+    </model>
+    <model name="AssetFolder" modelClass="ride\application\orm\asset\model\AssetFolderModel" entryClass="ride\application\orm\asset\entry\AssetFolderEntry">
+        <field name="parent" type="string">
+            <option name="label.name" value="label.parent" />
+        </field>
+        <field name="name" type="string" localized="true">
+            <option name="label.name" value="label.name" />
+            <validation name="required" />
+        </field>>
+        <field name="description" type="wysiwyg" localized="true">
+            <option name="label.name" value="label.description" />
+        </field>
+        <field name="assets" model="Asset" relation="hasMany" relationOrder="{orderIndex} ASC" />
+        <field name="orderIndex" type="integer" />
+        <field name="slug" type="string" unique="true" localized="true" />
+
+        <format name="title">{name}</format>
+
+        <option name="behaviour.date" value="true" />
+        <option name="behaviour.log" value="true" />
+        <option name="behaviour.slug" value="name" />
+        <option name="behaviour.version" value="true" />
+    </model>
+</models>
