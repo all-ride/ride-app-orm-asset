@@ -1,37 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <models>
-    <model name="Asset" modelClass="ride\application\orm\asset\model\AssetModel" entryClass="ride\application\orm\asset\entry\AssetEntry">
-        <field name="folder" model="AssetFolder" relation="belongsTo">
-        </field>
-        <field name="name" type="string" localized="true">
-            <option name="label.name" value="label.name" />
-            <validation name="required" />
-        </field>
-        <field name="description" type="wysiwyg" localized="true">
-            <option name="label.name" value="label.description" />
-        </field>
-        <field name="type" type="string">
-            <validation name="required" />
-        </field>
-        <field name="source" type="string" />
-        <field name="value" type="string">
-            <validation name="required" />
-        </field>
-        <field name="embedUrl" type="website" />
-        <field name="thumbnail" type="image" />
-        <field name="orderIndex" type="integer" />
-        <field name="slug" type="string" unique="true" localized="true" />
-
-        <format name="title">{name}</format>
-        <format name="teaser">{type}: {value}</format>
-        <format name="image">{thumbnail}</format>
-
-        <option name="behaviour.date" value="true" />
-        <option name="behaviour.log" value="true" />
-        <option name="behaviour.slug" value="name" />
-        <option name="behaviour.owner" value="true" />
-        <option name="behaviour.version" value="true" />
-    </model>
     <model name="AssetFolder" modelClass="ride\application\orm\asset\model\AssetFolderModel" entryClass="ride\application\orm\asset\entry\AssetFolderEntry">
         <field name="parent" type="string">
             <option name="label.name" value="label.parent" />
@@ -53,5 +21,129 @@
         <option name="behaviour.log" value="true" />
         <option name="behaviour.slug" value="name" />
         <option name="behaviour.version" value="true" />
+    </model>
+    <model name="Asset" modelClass="ride\application\orm\asset\model\AssetModel" entryClass="ride\application\orm\asset\entry\AssetEntry">
+        <field name="folder" model="AssetFolder" relation="belongsTo">
+        </field>
+        <field name="name" type="string" localized="true">
+            <option name="label.name" value="label.name" />
+            <validation name="required" />
+        </field>
+        <field name="description" type="wysiwyg" localized="true">
+            <option name="label.name" value="label.description" />
+        </field>
+        <field name="type" type="string">
+            <validation name="required" />
+        </field>
+        <field name="source" type="string" />
+        <field name="value" type="string">
+            <validation name="required" />
+        </field>
+        <field name="thumbnail" type="image" />
+        <field name="styles" model="AssetImageStyle" relation="hasMany" dependant="true" />
+        <field name="embedUrl" type="website" />
+        <field name="orderIndex" type="integer" />
+        <field name="slug" type="string" unique="true" localized="true" />
+
+        <format name="title">{name}</format>
+        <format name="teaser">{type}: {value}</format>
+        <format name="image">{thumbnail}</format>
+
+        <option name="behaviour.date" value="true" />
+        <option name="behaviour.log" value="true" />
+        <option name="behaviour.slug" value="name" />
+        <option name="behaviour.owner" value="true" />
+        <option name="behaviour.version" value="true" />
+    </model>
+    <model name="AssetImageStyle">
+        <field name="asset" model="Asset" relation="belongsTo">
+            <option name="label.name" value="label.asset" />
+            <validation name="required" />
+        </field>
+        <field name="style" model="ImageStyle" relation="belongsTo">
+            <option name="label.name" value="label.transformation" />
+            <validation name="required" />
+        </field>
+        <field name="image" type="image">
+            <option name="label.name" value="label.image" />
+            <validation name="required" />
+        </field>
+
+        <format name="title">{asset.name}</format>
+        <format name="teaser">{style.name}</format>
+        <format name="image">{image}</format>
+
+        <option name="behaviour.date" value="true" />
+        <option name="behaviour.log" value="true" />
+        <option name="behaviour.version" value="true" />
+    </model>
+    <model name="ImageStyle" entryClass="ride\application\orm\asset\entry\ImageStyleEntry">
+        <field name="name" type="string">
+            <option name="label.name" value="label.name" />
+            <option name="scaffold.order" value="true" />
+            <option name="scaffold.search" value="true" />
+            <validation name="required" />
+        </field>
+        <field name="transformations" model="ImageTransformation" relation="hasMany" linkModel="ImageStyleTransformation" order="true">
+            <option name="label.name" value="label.transformations" />
+            <option name="scaffold.form.type" value="select" />
+            <validation name="required" />
+        </field>
+
+        <format name="title">{name}</format>
+
+        <option name="behaviour.date" value="true" />
+        <option name="behaviour.log" value="true" />
+        <option name="behaviour.slug" value="name" />
+        <option name="behaviour.version" value="true" />
+        <option name="order.field" value="name" />
+        <option name="scaffold.controller" value="ride\web\base\controller\ImageStyleController" />
+        <option name="scaffold.title" value="title.image.styles" />
+    </model>
+    <model name="ImageTransformation" modelClass="ride\application\orm\asset\model\ImageTransformationModel">
+        <field name="name" type="string">
+            <option name="label.name" value="label.name" />
+            <option name="scaffold.order" value="true" />
+            <option name="scaffold.search" value="true" />
+            <validation name="required" />
+        </field>
+        <field name="transformation" type="string">
+            <option name="label.name" value="label.transformation" />
+            <option name="scaffold.form.type" value="select" />
+            <option name="scaffold.form.options.method" value="getTransformations" />
+            <validation name="required" />
+        </field>
+        <field name="options" model="ImageTransformationOption" relation="hasMany">
+            <option name="label.name" value="label.options" />
+        </field>
+
+        <format name="title">{name}</format>
+        <format name="teaser">{transformation}</format>
+
+        <option name="behaviour.date" value="true" />
+        <option name="behaviour.log" value="true" />
+        <option name="behaviour.version" value="true" />
+        <option name="order.field" value="name" />
+        <option name="scaffold.controller" value="ride\web\base\controller\ImageTransformationController" />
+        <option name="scaffold.title" value="title.image.transformations" />
+    </model>
+    <model name="ImageTransformationOption">
+        <field name="transformation" model="ImageTransformation" relation="belongsTo">
+            <option name="label.name" value="label.transformation" />
+            <validation name="required" />
+        </field>
+        <field name="key" type="string">
+            <option name="label.name" value="label.key" />
+            <validation name="required" />
+        </field>
+        <field name="value" type="string">
+            <option name="label.name" value="label.value" />
+        </field>
+
+        <format name="title">{transformation}</format>
+        <format name="teaser">{key}: {value}</format>
+
+        <option name="behaviour.date" value="true" />
+        <option name="behaviour.log" value="true" />
     </model>
 </models>
