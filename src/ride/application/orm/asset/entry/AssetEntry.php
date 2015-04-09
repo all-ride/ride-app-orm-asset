@@ -135,4 +135,45 @@ class AssetEntry extends OrmAssetEntry {
         parent::setThumbnail($thumbnail);
     }
 
+    /**
+     * Gets the image
+     * @return string|null Path to the image if available, null otherwise
+     */
+    public function getImage() {
+        if ($this->getType() == self::TYPE_IMAGE) {
+            return $this->getValue();
+        } else {
+            return $this->getThumbnail();
+        }
+    }
+
+    /**
+     * Gets the image of a style
+     * @return string|null Path to the image if available, null otherwise
+     */
+    public function getStyleImage($name) {
+        $style = $this->getStyle($name);
+        if ($style) {
+            return $style->getImage();
+        }
+
+        return null;
+    }
+
+    /**
+     * Gets a style by name
+     * @return \ride\application\orm\entry\AssetImageStyleEntry|null
+     */
+    public function getStyle($name) {
+        $assetStyles = $this->getStyles();
+        foreach ($assetStyles as $assetStyle) {
+            $style = $assetStyle->getStyle();
+            if ($style->getName() == $name || $style->getSlug() == $name) {
+                return $assetStyle;
+            }
+        }
+
+        return null;
+    }
+
 }
