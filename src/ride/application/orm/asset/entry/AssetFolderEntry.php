@@ -3,6 +3,7 @@
 namespace ride\application\orm\asset\entry;
 
 use ride\application\orm\entry\AssetFolderEntry as OrmAssetFolderEntry;
+use ride\application\orm\asset\model\AssetFolderModel;
 
 /**
  * Data container for a asset folder
