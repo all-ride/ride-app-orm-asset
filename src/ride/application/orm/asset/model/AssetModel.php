@@ -144,6 +144,27 @@ class AssetModel extends GenericModel {
     }
 
     /**
+     * Gets the dimension of the provided asset
+     * @param \ride\application\orm\asset\entry\AssetEntry $asset
+     * @return \ride\library\image\dimension\Dimension|null
+     */
+    public function getDimension(AssetEntry $asset) {
+        if (!$asset->isImage()) {
+            return null;
+        }
+
+        $file = $this->getFileBrowser()->getFile($asset->getValue());
+        if (!$file) {
+            return null;
+        }
+
+        $image = $this->getImageFactory()->createImage();
+        $image->read($file);
+
+        return $image->getDimension();
+    }
+
+    /**
      * Gets all the used types
      * @param \ride\library\i18n\translator\Translator $translator
      * @return array Array with the type as key and the translated type as value
