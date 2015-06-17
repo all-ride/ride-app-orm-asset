@@ -370,6 +370,8 @@ class AssetModel extends GenericModel {
             $asset->setType(AssetEntry::TYPE_VIDEO);
         } elseif ($media->isAudio()) {
             $asset->setType(AssetEntry::TYPE_AUDIO);
+        } else {
+            $asset->setType(AssetEntry::TYPE_UNKNOWN);
         }
 
         if (!$asset->getName()) {
