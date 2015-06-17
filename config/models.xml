@@ -13,7 +13,6 @@
         </field>
         <field name="assets" model="Asset" relation="hasMany" relationOrder="{orderIndex} ASC" />
         <field name="orderIndex" type="integer" />
-        <field name="slug" type="string" unique="true" localized="true" />
 
         <format name="title">{name}</format>
 
@@ -32,6 +31,9 @@
         <field name="description" type="wysiwyg" localized="true">
             <option name="label.name" value="label.description" />
         </field>
+        <field name="copyright" type="string" localized="true">
+            <option name="label.name" value="label.copyright" />
+        </field>
         <field name="type" type="string">
             <validation name="required" />
         </field>
@@ -43,7 +45,6 @@
         <field name="styles" model="AssetImageStyle" relation="hasMany" dependant="true" />
         <field name="embedUrl" type="website" />
         <field name="orderIndex" type="integer" />
-        <field name="slug" type="string" unique="true" localized="true" />
 
         <format name="title">{name}</format>
         <format name="teaser">{type}: {value}</format>
