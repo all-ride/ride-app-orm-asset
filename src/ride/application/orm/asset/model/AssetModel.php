@@ -8,6 +8,7 @@ use ride\application\orm\asset\entry\AssetFolderEntry;
 use ride\library\http\Header;
 use ride\library\image\exception\ImageException;
 use ride\library\i18n\translator\Translator;
+use ride\library\media\exception\UnsupportedMediaException;
 use ride\library\orm\model\GenericModel;
 
 use \Exception;
@@ -22,6 +23,12 @@ class AssetModel extends GenericModel {
      * @var string
      */
     const SOURCE_FILE = 'file';
+
+    /**
+     * Name of the URL source
+     * @var string
+     */
+    const SOURCE_URL = 'url';
 
     /**
      * Gets an entry list as a flat list
@@ -362,28 +369,30 @@ class AssetModel extends GenericModel {
      */
     protected function parseUrl($asset) {
         $mediaFactory = $this->getMediaFactory();
-        $media = $mediaFactory->createMediaItem($asset->getValue());
 
-        $asset->setSource($media->getType());
-        $asset->setEmbedUrl($media->getEmbedUrl());
-        if ($media->isVideo()) {
-            $asset->setType(AssetEntry::TYPE_VIDEO);
-        } elseif ($media->isAudio()) {
-            $asset->setType(AssetEntry::TYPE_AUDIO);
-        } else {
-            $asset->setType(AssetEntry::TYPE_UNKNOWN);
-        }
+        try {
+            $media = $mediaFactory->createMediaItem($asset->getValue());
+            $asset->setSource($media->getType());
+            $asset->setEmbedUrl($media->getEmbedUrl());
 
-        if (!$asset->getName()) {
-            $asset->setName($media->getTitle());
-        }
-        if (!$asset->getDescription()) {
-            $asset->setDescription($media->getDescription());
-        }
-        if (!$asset->getThumbnail()) {
-            $client = $mediaFactory->getHttpClient();
+            if ($media->isVideo()) {
+                $asset->setType(AssetEntry::TYPE_VIDEO);
+            } elseif ($media->isAudio()) {
+                $asset->setType(AssetEntry::TYPE_AUDIO);
+            } else {
+                $asset->setType(AssetEntry::TYPE_UNKNOWN);
+            }
 
-            if ($media->getThumbnailUrl()) {
+            if (!$asset->getName()) {
+                $asset->setName($media->getTitle());
+            }
+
+            if (!$asset->getDescription()) {
+                $asset->setDescription($media->getDescription());
+            }
+
+            if (!$asset->getThumbnail() && $media->getThumbnailUrl()) {
+                $client = $mediaFactory->getHttpClient();
                 $response = $client->get($media->getThumbnailUrl());
 
                 if ($response->isOk()) {
@@ -397,6 +406,13 @@ class AssetModel extends GenericModel {
                     $file = $this->getFileBrowser()->getRelativeFile($file, true);
                     $asset->setThumbnail($file->getPath());
                 }
+            }
+        } catch (UnsupportedMediaException $exception) {
+            $asset->setSource(self::SOURCE_URL);
+            $asset->setType(AssetEntry::TYPE_UNKNOWN);
+
+            if (!$asset->getName()) {
+                $asset->setName($asset->getValue());
             }
         }
     }
