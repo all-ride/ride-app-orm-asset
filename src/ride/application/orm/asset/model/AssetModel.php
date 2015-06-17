@@ -381,17 +381,20 @@ class AssetModel extends GenericModel {
         if (!$asset->getThumbnail()) {
             $client = $mediaFactory->getHttpClient();
 
-            $response = $client->get($media->getThumbnailUrl());
-            if ($response->isOk()) {
-                $contentType = $response->getHeader(Header::HEADER_CONTENT_TYPE);
-                $extension = str_replace('image/', '', $contentType);
+            if ($media->getThumbnailUrl()) {
+                $response = $client->get($media->getThumbnailUrl());
 
-                $directory = $this->getDirectory();
-                $file = $directory->getChild($media->getId() . '.' . $extension);
-                $file->write($response->getBody());
+                if ($response->isOk()) {
+                    $contentType = $response->getHeader(Header::HEADER_CONTENT_TYPE);
+                    $extension = str_replace('image/', '', $contentType);
 
-                $file = $this->getFileBrowser()->getRelativeFile($file, true);
-                $asset->setThumbnail($file->getPath());
+                    $directory = $this->getDirectory();
+                    $file = $directory->getChild($media->getId() . '.' . $extension);
+                    $file->write($response->getBody());
+
+                    $file = $this->getFileBrowser()->getRelativeFile($file, true);
+                    $asset->setThumbnail($file->getPath());
+                }
             }
         }
     }
