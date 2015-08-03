@@ -456,6 +456,10 @@ class AssetModel extends GenericModel {
                     $asset->setType(AssetEntry::TYPE_PDF);
 
                     break;
+                case 'mp4':
+                    $asset->setType(AssetEntry::TYPE_VIDEO);
+
+                    break;
                 default:
                     $asset->setType(AssetEntry::TYPE_UNKNOWN);
 
