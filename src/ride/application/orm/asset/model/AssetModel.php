@@ -458,7 +458,18 @@ class AssetModel extends GenericModel {
                     $asset->setType(AssetEntry::TYPE_PDF);
 
                     break;
+                case 'avi':
+                case 'flv':
+                case 'm4v':
+                case 'mkv':
+                case 'mov':
                 case 'mp4':
+                case 'mpeg':
+                case 'mpg':
+                case 'ogv':
+                case 'vob':
+                case 'webm':
+                case 'wmv':
                     $asset->setType(AssetEntry::TYPE_VIDEO);
 
                     break;
