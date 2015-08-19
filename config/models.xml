@@ -20,6 +20,7 @@
         <option name="behaviour.log" value="true" />
         <option name="behaviour.slug" value="name" />
         <option name="behaviour.version" value="true" />
+        <option name="json.api" value="asset-folders" />
     </model>
     <model name="Asset" modelClass="ride\application\orm\asset\model\AssetModel" entryClass="ride\application\orm\asset\entry\AssetEntry">
         <field name="folder" model="AssetFolder" relation="belongsTo">
@@ -55,6 +56,7 @@
         <option name="behaviour.slug" value="name" />
         <option name="behaviour.owner" value="true" />
         <option name="behaviour.version" value="true" />
+        <option name="json.api" value="assets" />
     </model>
     <model name="AssetImageStyle">
         <field name="asset" model="Asset" relation="belongsTo">
@@ -77,6 +79,7 @@
         <option name="behaviour.date" value="true" />
         <option name="behaviour.log" value="true" />
         <option name="behaviour.version" value="true" />
+        <option name="json.api" value="asset-image-styles" />
     </model>
     <model name="ImageStyle" entryClass="ride\application\orm\asset\entry\ImageStyleEntry">
         <field name="name" type="string">
@@ -97,6 +100,7 @@
         <option name="behaviour.log" value="true" />
         <option name="behaviour.slug" value="name" />
         <option name="behaviour.version" value="true" />
+        <option name="json.api" value="image-styles" />
         <option name="order.field" value="name" />
         <option name="scaffold.controller" value="ride\web\base\controller\ImageStyleController" />
         <option name="scaffold.title" value="title.image.styles" />
@@ -124,6 +128,7 @@
         <option name="behaviour.date" value="true" />
         <option name="behaviour.log" value="true" />
         <option name="behaviour.version" value="true" />
+        <option name="json.api" value="image-transformations" />
         <option name="order.field" value="name" />
         <option name="scaffold.controller" value="ride\web\base\controller\ImageTransformationController" />
         <option name="scaffold.title" value="title.image.transformations" />
@@ -146,5 +151,6 @@
 
         <option name="behaviour.date" value="true" />
         <option name="behaviour.log" value="true" />
+        <option name="json.api" value="image-transformation-options" />
     </model>
 </models>
