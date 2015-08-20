@@ -11,7 +11,7 @@
         <field name="description" type="wysiwyg" localized="true">
             <option name="label.name" value="label.description" />
         </field>
-        <field name="assets" model="Asset" relation="hasMany" relationOrder="{orderIndex} ASC" />
+        <field name="assets" model="Asset" relation="hasMany" relationOrder="{orderIndex} ASC" dependant="true"/>
         <field name="orderIndex" type="integer" />
 
         <format name="title">{name}</format>
