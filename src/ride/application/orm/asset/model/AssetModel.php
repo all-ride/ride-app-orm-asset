@@ -451,7 +451,13 @@ class AssetModel extends GenericModel {
             }
         } catch (ImageException $exception) {
             switch ($file->getExtension()) {
-                case 'flac':
+                case 'svg':
+                    $asset->setType(AssetEntry::TYPE_IMAGE);
+                    if (!$asset->getThumbnail()) {
+                        $asset->setThumbnail($asset->getValue());
+                    }
+
+                    break;
                 case 'mp3':
                 case 'ogg':
                 case 'wav':
