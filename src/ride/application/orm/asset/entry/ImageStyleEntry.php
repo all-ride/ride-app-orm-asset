@@ -15,7 +15,11 @@ class ImageStyleEntry extends OrmImageStyleEntry {
      * and the an option array as value
      */
     public function getTransformationArray() {
-        $result = array();
+        if (isset($this->transformationArray)) {
+            return $this->transformationArray;
+        }
+
+        $this->transformationArray = array();
 
         $transformations = $this->getTransformations();
         foreach ($transformations as $transformation) {
@@ -26,10 +30,10 @@ class ImageStyleEntry extends OrmImageStyleEntry {
                 $options[$transformationOption->getKey()] = $transformationOption->getValue();
             }
 
-            $result[$transformation->getTransformation()] = $options;
+            $this->transformationArray[$transformation->getTransformation()] = $options;
         }
 
-        return $result;
+        return $this->transformationArray;
     }
 
 }
