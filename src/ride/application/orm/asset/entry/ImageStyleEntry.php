@@ -36,4 +36,28 @@ class ImageStyleEntry extends OrmImageStyleEntry {
         return $this->transformationArray;
     }
 
+    /**
+     * Gets an array with resize and crop transformation definitions
+     * @return array Array with the machine name of the transformation as key
+     * and the an option array as value
+     */
+    public function getSizeTransformationArray() {
+        if (isset($this->sizeTransformationArray)) {
+            return $this->siteTransformationArray;
+        }
+
+        $transformationArray = $this->getTransformationArray();
+        foreach ($transformationArray as $key => $value) {
+            if ($key == 'resize' || $key == 'crop') {
+                continue;
+            }
+
+            unset($transformationArray[$key]);
+        }
+
+        $this->sizeTransformationArray = $transformationArray;
+
+        return $this->sizeTransformationArray;
+    }
+
 }
