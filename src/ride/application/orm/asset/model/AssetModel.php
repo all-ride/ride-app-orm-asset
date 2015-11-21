@@ -383,8 +383,8 @@ class AssetModel extends GenericModel {
                 $asset->setType(AssetEntry::TYPE_AUDIO);
             } elseif ($media->isImage()) {
                 $asset->setType(AssetEntry::TYPE_IMAGE);
-            } elseif ($media->isPdf()) {
-                $asset->setType(AssetEntry::TYPE_PDF);
+            } elseif ($media->isDocument()) {
+                $asset->setType(AssetEntry::TYPE_DOCUMENT);
             } else {
                 $asset->setType(AssetEntry::TYPE_UNKNOWN);
             }
@@ -465,7 +465,7 @@ class AssetModel extends GenericModel {
 
                     break;
                 case 'pdf':
-                    $asset->setType(AssetEntry::TYPE_PDF);
+                    $asset->setType(AssetEntry::TYPE_DOCUMENT);
 
                     break;
                 case 'avi':
