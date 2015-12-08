@@ -97,6 +97,8 @@ class AssetFolderModel extends GenericModel {
             return $folder;
         }
 
+        $locale = $this->getLocale($locale);
+
         $query = $this->createQuery($locale);
         $query->setRecursiveDepth(0);
         if ($fetchUnlocalized !== null) {
@@ -105,13 +107,34 @@ class AssetFolderModel extends GenericModel {
 
         if (is_numeric($id)) {
             $query->addCondition('{id} = %1%', $id);
-        } elseif (is_string($id)) {
-            $query->addCondition('{slug} = %1%', $id);
-        } else {
+
+            return $query->queryFirst();
+        } elseif (!is_string($id)) {
             throw new Exception('Could not get folder: invalid id provided (' . gettype($id) . ')');
         }
 
-        return $query->queryFirst();
+        $query->addCondition('{slug} = %1%', $id);
+
+        $folder = $query->queryFirst();
+        if ($folder || !$fetchUnlocalized) {
+            return $folder;
+        }
+
+        $locales = $this->getOrmManager()->getLocales();
+        foreach ($locales as $l) {
+            if ($l == $locale) {
+                continue;
+            }
+
+            $query->setLocale($l);
+
+            $folder = $query->queryFirst();
+            if ($folder) {
+                return $folder;
+            }
+        }
+
+        return null;
     }
 
     /**
