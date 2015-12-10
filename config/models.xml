@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <models>
     <model name="AssetFolder" modelClass="ride\application\orm\asset\model\AssetFolderModel" entryClass="ride\application\orm\asset\entry\AssetFolderEntry">
-        <field name="parent" type="string">
+        <field name="parent" type="string" default="0">
             <option name="label.name" value="label.parent" />
         </field>
         <field name="name" type="string" localized="true">

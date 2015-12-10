@@ -96,6 +96,22 @@ class AssetFolderEntry extends OrmAssetFolderEntry {
     }
 
     /**
+     * Gets the first image of this folder
+     * @return AssetEntry
+     */
+    public function getImage() {
+        $assets = $this->getAssets();
+
+        foreach ($assets as $asset) {
+            if ($asset->isImage()) {
+                return $asset;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Sets the children of this folder
      * @param array $children
      * @return null
