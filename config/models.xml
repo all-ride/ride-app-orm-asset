@@ -32,6 +32,10 @@
         <field name="description" type="wysiwyg" localized="true">
             <option name="label.name" value="label.description" />
         </field>
+        <field name="alt" type="string" localized="true">
+            <option name="label.name" value="label.alt" />
+            <option name="label.description" value="label.alt.description" />
+        </field>
         <field name="copyright" type="string" localized="true">
             <option name="label.name" value="label.copyright" />
         </field>
