@@ -374,6 +374,7 @@ class AssetModel extends GenericModel {
 
         try {
             $media = $mediaFactory->createMediaItem($asset->getValue());
+
             $asset->setSource($media->getType());
             $asset->setEmbedUrl($media->getEmbedUrl());
 
@@ -402,14 +403,15 @@ class AssetModel extends GenericModel {
                 $response = $client->get($media->getThumbnailUrl());
 
                 if ($response->isOk()) {
-                    $contentType = $response->getHeader(Header::HEADER_CONTENT_TYPE);
-                    $extension = str_replace('image/', '', $contentType);
+                    $mediaType = $response->getHeader(Header::HEADER_CONTENT_TYPE);
+                    $extension = $this->getMimeService()->getExtensionForMediaType($mediaType);
 
                     $directory = $this->getDirectory();
                     $file = $directory->getChild($media->getId() . '.' . $extension);
                     $file->write($response->getBody());
 
                     $file = $this->getFileBrowser()->getRelativeFile($file, true);
+
                     $asset->setThumbnail($file->getPath());
                 }
             }
@@ -436,58 +438,28 @@ class AssetModel extends GenericModel {
             return;
         }
 
+        $mediaType = $this->getMimeService()->getMediaTypeForFile($file);
+
+        $asset->setMime((string) $mediaType);
         $asset->setSource(self::SOURCE_FILE);
+
         if (!$asset->getName()) {
             $asset->setName($file->getName(true));
         }
 
-        $image = $this->getImageFactory()->createImage();
-        try {
-            $image->read($file);
-
+        if ($mediaType->isImage()) {
             $asset->setType(AssetEntry::TYPE_IMAGE);
             if (!$asset->getThumbnail()) {
                 $asset->setThumbnail($asset->getValue());
             }
-        } catch (ImageException $exception) {
-            switch ($file->getExtension()) {
-                case 'svg':
-                    $asset->setType(AssetEntry::TYPE_IMAGE);
-                    if (!$asset->getThumbnail()) {
-                        $asset->setThumbnail($asset->getValue());
-                    }
-
-                    break;
-                case 'mp3':
-                case 'ogg':
-                case 'wav':
-                    $asset->setType(AssetEntry::TYPE_AUDIO);
-
-                    break;
-                case 'pdf':
-                    $asset->setType(AssetEntry::TYPE_DOCUMENT);
-
-                    break;
-                case 'avi':
-                case 'flv':
-                case 'm4v':
-                case 'mkv':
-                case 'mov':
-                case 'mp4':
-                case 'mpeg':
-                case 'mpg':
-                case 'ogv':
-                case 'vob':
-                case 'webm':
-                case 'wmv':
-                    $asset->setType(AssetEntry::TYPE_VIDEO);
-
-                    break;
-                default:
-                    $asset->setType(AssetEntry::TYPE_UNKNOWN);
-
-                    break;
-            }
+        } elseif ($mediaType->isAudio()) {
+            $asset->setType(AssetEntry::TYPE_AUDIO);
+        } elseif ($mediaType->isVideo()) {
+            $asset->setType(AssetEntry::TYPE_VIDEO);
+        } elseif ((string) $mediaType == 'application/pdf') {
+            $asset->setType(AssetEntry::TYPE_DOCUMENT);
+        } else {
+            $asset->setType(AssetEntry::TYPE_UNKNOWN);
         }
     }
 
@@ -497,6 +469,14 @@ class AssetModel extends GenericModel {
      */
     public function getDirectory() {
         return $this->orm->getDependencyInjector()->get('ride\\library\\system\\file\\File', 'assets');
+    }
+
+    /**
+     * Gets the MIME service
+     * @return \ride\service\MimeService
+     */
+    public function getMimeService() {
+        return $this->orm->getDependencyInjector()->get('ride\\service\\MimeService');
     }
 
     /**
