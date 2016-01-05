@@ -46,6 +46,7 @@
         <field name="value" type="string">
             <validation name="required" />
         </field>
+        <field name="mime" type="string" />
         <field name="thumbnail" type="image" />
         <field name="styles" model="AssetImageStyle" relation="hasMany" dependant="true" />
         <field name="embedUrl" type="website" />
