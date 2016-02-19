@@ -62,6 +62,7 @@
         <option name="behaviour.owner" value="true" />
         <option name="behaviour.version" value="true" />
         <option name="json.api" value="assets" />
+        <option name="json.api.adapter" value="assets" />
     </model>
     <model name="AssetImageStyle">
         <field name="asset" model="Asset" relation="belongsTo">

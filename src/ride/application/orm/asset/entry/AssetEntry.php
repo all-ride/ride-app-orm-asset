@@ -4,6 +4,8 @@ namespace ride\application\orm\asset\entry;
 
 use ride\application\orm\entry\AssetEntry as OrmAssetEntry;
 
+use ride\library\StringHelper;
+
 /**
  * Data container for a asset object
  */
@@ -50,7 +52,7 @@ class AssetEntry extends OrmAssetEntry {
      * return boolean
      */
     public function isUrl() {
-        return filter_var($this->getValue(), FILTER_VALIDATE_URL);
+        return StringHelper::startsWith($this->getValue(), array('http://', 'https://'));
     }
 
     /**
