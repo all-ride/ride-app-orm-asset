@@ -18,10 +18,16 @@ class AssetEntry extends OrmAssetEntry {
     const TYPE_AUDIO = 'audio';
 
     /**
-     * Pdf type
+     * document type
      * @var string
      */
     const TYPE_DOCUMENT = 'document';
+
+    /**
+     * Pdf type
+     * @var string
+     */
+    const TYPE_PDF = 'pdf';
 
     /**
      * Image type
@@ -64,11 +70,18 @@ class AssetEntry extends OrmAssetEntry {
     }
 
     /**
-     * Gets whether this asset is audio
+     * Gets whether this asset is a document
      * @return boolean
      */
     public function isDocument() {
         return $this->getType() == self::TYPE_DOCUMENT;
+    }
+    /**
+     * Gets whether this asset is a pdf
+     * @return boolean
+     */
+    public function isPdf() {
+        return $this->getType() == self::TYPE_PDF;
     }
 
     /**
