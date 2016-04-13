@@ -357,6 +357,56 @@ class AssetFolderModel extends GenericModel {
     }
 
     /**
+     * Moves folders to another folder
+     * @param \ride\application\orm\asset\entry\AssetFolderEntry|array $source
+     * @param \ride\application\orm\asset\entry\AssetFolderEntry $destination
+     * @return null
+     */
+    public function move($sources, AssetFolderEntry $destination = null) {
+        if (!is_array($sources)) {
+            $sources = array($sources);
+        }
+
+        $oldFolders = array();
+        $orderIndex = $this->getNewOrderIndex($destination);
+
+        foreach ($sources as $source) {
+            if ($destination && ($source->getId() == $destination->getId() || $source->getParentFolderId() == $destination->getId())) {
+                continue;
+            }
+
+            $oldFolderId = $source->getParentFolderId();
+            $oldFolders[$oldFolderId] = $source->getLocale();
+
+            if ($destination) {
+                $source->setParent($destination->getPath());
+            } else {
+                $source->setParent('0');
+            }
+
+            $source->setOrderIndex($orderIndex);
+
+            $orderIndex++;
+        }
+
+        $isTransactionStarted = $this->beginTransaction();
+        try {
+            $this->save($sources);
+
+            foreach ($oldFolders as $oldFolderId => $locale) {
+                $folder = $this->getById($oldFolderId, $locale, true);
+                $this->orderFolder($folder);
+            }
+
+            $this->commitTransaction($isTransactionStarted);
+        } catch (Exception $exception) {
+            $this->rollbackTransaction($isTransactionStarted);
+
+            throw $exception;
+        }
+    }
+
+    /**
      * Orders the provided folders in the order they are provided
      * @param array $folders
      * @return null

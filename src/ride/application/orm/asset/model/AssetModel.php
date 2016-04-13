@@ -219,6 +219,51 @@ class AssetModel extends GenericModel {
     }
 
     /**
+     * Moves assets to another folder
+     * @param \ride\application\orm\asset\entry\AssetEntry|array $assets Asset or
+     * an array of assets to move
+     * @param \ride\application\orm\asset\entry\AssetFolderEntry $destination
+     * @return null
+     */
+    public function move($assets, AssetFolderEntry $destination = null) {
+        if (!is_array($assets)) {
+            $assets = array($assets);
+        }
+
+        $sources = array();
+        $this->getNewOrderIndex($destination);
+
+        foreach ($assets as $asset) {
+            if (!$asset->getFolder() && !$destination || ($asset->getFolder() && $destination && $asset->getFolder()->getId() == $destination->getId())) {
+                continue;
+            }
+
+            $source = $asset->getFolder();
+            $sources[$source ? $source->getId() : 0] = $source;
+
+            $asset->setFolder($destination);
+            $asset->setOrderIndex($orderIndex);
+
+            $orderIndex++;
+        }
+
+        $isTransactionStarted = $this->beginTransaction();
+        try {
+            $this->save($assets);
+
+            foreach ($sources as $source) {
+                $this->orderFolder($source);
+            }
+
+            $this->commitTransaction($isTransactionStarted);
+        } catch (Exception $exception) {
+            $this->rollbackTransaction($isTransactionStarted);
+
+            throw $exception;
+        }
+    }
+
+    /**
      * Orders the provided items in the order they are provided
      * @param array $assets
      * @return null
