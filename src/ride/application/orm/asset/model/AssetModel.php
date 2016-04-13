@@ -231,7 +231,7 @@ class AssetModel extends GenericModel {
         }
 
         $sources = array();
-        $this->getNewOrderIndex($destination);
+        $orderIndex = $this->getNewOrderIndex($destination);
 
         foreach ($assets as $asset) {
             if (!$asset->getFolder() && !$destination || ($asset->getFolder() && $destination && $asset->getFolder()->getId() == $destination->getId())) {
