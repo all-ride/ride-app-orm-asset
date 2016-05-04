@@ -422,6 +422,7 @@ class AssetModel extends GenericModel {
 
             $asset->setSource($media->getType());
             $asset->setEmbedUrl($media->getEmbedUrl());
+            $asset->setThumbnail(null);
 
             if ($media->isVideo()) {
                 $asset->setType(AssetEntry::TYPE_VIDEO);
@@ -443,7 +444,7 @@ class AssetModel extends GenericModel {
                 $asset->setDescription($media->getDescription());
             }
 
-            if (!$asset->getThumbnail() && $media->getThumbnailUrl()) {
+            if ($media->getThumbnailUrl()) {
                 $client = $mediaFactory->getHttpClient();
                 $response = $client->get($media->getThumbnailUrl());
 
@@ -463,6 +464,7 @@ class AssetModel extends GenericModel {
         } catch (UnsupportedMediaException $exception) {
             $asset->setSource(self::SOURCE_URL);
             $asset->setType(AssetEntry::TYPE_UNKNOWN);
+            $asset->setThumbnail(null);
 
             if (!$asset->getName()) {
                 $asset->setName($asset->getValue());
@@ -487,6 +489,7 @@ class AssetModel extends GenericModel {
 
         $asset->setMime((string) $mediaType);
         $asset->setSource(self::SOURCE_FILE);
+        $asset->setThumbnail(null);
 
         if (!$asset->getName()) {
             $asset->setName($file->getName(true));
@@ -494,9 +497,7 @@ class AssetModel extends GenericModel {
 
         if ($mediaType->isImage()) {
             $asset->setType(AssetEntry::TYPE_IMAGE);
-            if (!$asset->getThumbnail()) {
-                $asset->setThumbnail($asset->getValue());
-            }
+            $asset->setThumbnail($asset->getValue());
         } elseif ($mediaType->isAudio()) {
             $asset->setType(AssetEntry::TYPE_AUDIO);
         } elseif ($mediaType->isVideo()) {

@@ -4,6 +4,7 @@ namespace ride\application\orm\asset\entry;
 
 use ride\application\orm\entry\AssetEntry as OrmAssetEntry;
 
+use ride\library\orm\entry\EntryProxy;
 use ride\library\StringHelper;
 
 /**
@@ -113,12 +114,22 @@ class AssetEntry extends OrmAssetEntry {
         if (!$this->getId()) {
             $this->setIsParsed(false);
         } else {
-            $oldValue = $this->getValue();
+            $oldValue = -1;
 
-            if ($oldValue === null || $oldValue === $value) {
-                $this->setIsParsed(true);
-            } else {
+            if ($this instanceof EntryProxy) {
+                if ($this->isValueLoaded('value')) {
+                    $oldValue = $this->getLoadedValues('value');
+                }
+            }
+
+            if ($oldValue === -1) {
+                $oldValue = $this->getValue();
+            }
+
+            if ($oldValue !== $value) {
                 $this->setIsParsed(false);
+            } else {
+                $this->setIsParsed(true);
             }
         }
 
@@ -130,20 +141,20 @@ class AssetEntry extends OrmAssetEntry {
      * @param string $thumbnail
      * @return null
      */
-    public function setThumbnail($thumbnail) {
-        if (!$this->getId()) {
-            $this->setIsParsed(false);
-        } else {
-            $oldThumbnail = $this->getThumbnail();
-            if ($thumbnail && $oldThumbnail === $thumbnail) {
-                $this->setIsParsed(true);
-            } else {
-                $this->setIsParsed(false);
-            }
-        }
+    // public function setThumbnail($thumbnail) {
+        // if (!$this->getId()) {
+            // $this->setIsParsed(false);
+        // } else {
+            // $oldThumbnail = $this->getThumbnail();
+            // if ($thumbnail && $oldThumbnail === $thumbnail) {
+                // $this->setIsParsed(true);
+            // } else {
+                // $this->setIsParsed(false);
+            // }
+        // }
 
-        parent::setThumbnail($thumbnail);
-    }
+        // parent::setThumbnail($thumbnail);
+    // }
 
     /**
      * Gets the image
