@@ -61,6 +61,7 @@
         <option name="behaviour.slug" value="name" />
         <option name="behaviour.owner" value="true" />
         <option name="behaviour.version" value="true" />
+        <option name="files.delete" value="true" />
         <option name="json.api" value="assets" />
         <option name="json.api.adapter" value="assets" />
     </model>
@@ -85,6 +86,7 @@
         <option name="behaviour.date" value="true" />
         <option name="behaviour.log" value="true" />
         <option name="behaviour.version" value="true" />
+        <option name="files.delete" value="true" />
         <option name="json.api" value="asset-image-styles" />
     </model>
     <model name="ImageStyle" entryClass="ride\application\orm\asset\entry\ImageStyleEntry">
