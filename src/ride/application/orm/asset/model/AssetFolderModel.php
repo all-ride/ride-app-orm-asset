@@ -371,7 +371,7 @@ class AssetFolderModel extends GenericModel {
         $orderIndex = $this->getNewOrderIndex($destination);
 
         foreach ($sources as $source) {
-            if ($destination && ($source->getId() == $destination->getId() || $source->getParentFolderId() == $destination->getId())) {
+            if ($destination && ($source->getId() == $destination->getId() || ($source->getParentFolderId() == $destination->getId() && strpos($source->getPath(), $destination->getPath()) === 0))) {
                 continue;
             }
 
@@ -393,9 +393,19 @@ class AssetFolderModel extends GenericModel {
         try {
             $this->save($sources);
 
+            // update old parents
             foreach ($oldFolders as $oldFolderId => $locale) {
                 $folder = $this->getById($oldFolderId, $locale, true);
                 $this->orderFolder($folder);
+            }
+
+            // update source child folders
+            foreach ($sources as $source) {
+                $query = $this->createQuery();
+                $query->addCondition('{parent} = %1% OR {parent} LIKE %2%', $source->getId(), '%-' . $source->getId());
+                $subfolders = $query->query();
+
+                $this->move($subfolders, $source);
             }
 
             $this->commitTransaction($isTransactionStarted);
