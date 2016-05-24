@@ -107,6 +107,7 @@ class AssetModel extends GenericModel {
      */
     protected function createByFolderQuery($folder, $locale = null, $fetchUnlocalized = null, array $filter = null) {
         $query = $this->createQuery($locale);
+        $query->setDistinct(true);
         $query->setFetchUnlocalized($fetchUnlocalized);
         $query->addOrderBy('{orderIndex} ASC');
 
