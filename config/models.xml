@@ -101,6 +101,10 @@
             <option name="scaffold.form.type" value="select" />
             <validation name="required" />
         </field>
+        <field name="isExposed" type="boolean" default="1">
+            <option name="label.name" value="label.expose" />
+            <option name="label.description" value="label.expose.image.style.description" />
+        </field>
 
         <format name="title">{name}</format>
 
