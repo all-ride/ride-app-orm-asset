@@ -6,10 +6,13 @@
         </field>
         <field name="name" type="string" localized="true">
             <option name="label.name" value="label.name" />
-            <validation name="required" />
+            <filter name="trim" />
+            <filter name="stripTags" />
+            <validator name="required" />
         </field>>
         <field name="description" type="wysiwyg" localized="true">
             <option name="label.name" value="label.description" />
+            <filter name="trim" />
         </field>
         <field name="assets" model="Asset" relation="hasMany" relationOrder="{orderIndex} ASC" dependant="true"/>
         <field name="orderIndex" type="integer" />
@@ -20,6 +23,7 @@
         <option name="behaviour.log" value="true" />
         <option name="behaviour.slug" value="name" />
         <option name="behaviour.version" value="true" />
+        <option name="group" value="asset"/>
         <option name="json.api" value="asset-folders" />
     </model>
     <model name="Asset" modelClass="ride\application\orm\asset\model\AssetModel" entryClass="ride\application\orm\asset\entry\AssetEntry">
@@ -27,24 +31,31 @@
         </field>
         <field name="name" type="string" localized="true">
             <option name="label.name" value="label.name" />
-            <validation name="required" />
+            <filter name="trim" />
+            <filter name="stripTags" />
+            <validator name="required" />
         </field>
         <field name="description" type="wysiwyg" localized="true">
+            <filter name="trim" />
             <option name="label.name" value="label.description" />
         </field>
         <field name="alt" type="string" localized="true">
             <option name="label.name" value="label.alt" />
             <option name="label.description" value="label.alt.description" />
+            <filter name="trim" />
+            <filter name="stripTags" />
         </field>
         <field name="copyright" type="string" localized="true">
             <option name="label.name" value="label.copyright" />
+            <filter name="trim" />
+            <filter name="stripTags" />
         </field>
         <field name="type" type="string">
-            <validation name="required" />
+            <validator name="required" />
         </field>
         <field name="source" type="string" />
         <field name="value" type="string">
-            <validation name="required" />
+            <validator name="required" />
         </field>
         <field name="mime" type="string" />
         <field name="thumbnail" type="image" />
@@ -62,21 +73,22 @@
         <option name="behaviour.owner" value="true" />
         <option name="behaviour.version" value="true" />
         <option name="files.delete" value="true" />
+        <option name="group" value="asset"/>
         <option name="json.api" value="assets" />
         <option name="json.api.adapter" value="assets" />
     </model>
     <model name="AssetImageStyle">
         <field name="asset" model="Asset" relation="belongsTo">
             <option name="label.name" value="label.asset" />
-            <validation name="required" />
+            <validator name="required" />
         </field>
         <field name="style" model="ImageStyle" relation="belongsTo">
             <option name="label.name" value="label.transformation" />
-            <validation name="required" />
+            <validator name="required" />
         </field>
         <field name="image" type="image">
             <option name="label.name" value="label.image" />
-            <validation name="required" />
+            <validator name="required" />
         </field>
 
         <format name="title">{asset.name}</format>
@@ -87,6 +99,7 @@
         <option name="behaviour.log" value="true" />
         <option name="behaviour.version" value="true" />
         <option name="files.delete" value="true" />
+        <option name="group" value="asset"/>
         <option name="json.api" value="asset-image-styles" />
     </model>
     <model name="ImageStyle" entryClass="ride\application\orm\asset\entry\ImageStyleEntry">
@@ -94,16 +107,22 @@
             <option name="label.name" value="label.name" />
             <option name="scaffold.order" value="true" />
             <option name="scaffold.search" value="true" />
-            <validation name="required" />
+            <filter name="trim" />
+            <filter name="stripTags" />
+            <validator name="required" />
         </field>
         <field name="transformations" model="ImageTransformation" relation="hasMany" linkModel="ImageStyleTransformation" order="true">
             <option name="label.name" value="label.transformations" />
             <option name="scaffold.form.type" value="select" />
-            <validation name="required" />
+            <validator name="required" />
         </field>
         <field name="isExposed" type="boolean" default="1">
             <option name="label.name" value="label.expose" />
             <option name="label.description" value="label.expose.image.style.description" />
+        </field>
+        <field name="slug" type="string">
+            <option name="scaffold.form.type" value="label"/>
+            <validator name="required"/>
         </field>
 
         <format name="title">{name}</format>
@@ -112,6 +131,7 @@
         <option name="behaviour.log" value="true" />
         <option name="behaviour.slug" value="name" />
         <option name="behaviour.version" value="true" />
+        <option name="group" value="asset"/>
         <option name="json.api" value="image-styles" />
         <option name="order.field" value="name" />
         <option name="scaffold.controller" value="ride\web\base\controller\ImageStyleController" />
@@ -122,13 +142,15 @@
             <option name="label.name" value="label.name" />
             <option name="scaffold.order" value="true" />
             <option name="scaffold.search" value="true" />
-            <validation name="required" />
+            <filter name="trim" />
+            <filter name="stripTags" />
+            <validator name="required" />
         </field>
         <field name="transformation" type="string">
             <option name="label.name" value="label.transformation" />
             <option name="scaffold.form.type" value="select" />
             <option name="scaffold.form.options.method" value="getTransformations" />
-            <validation name="required" />
+            <validator name="required" />
         </field>
         <field name="options" model="ImageTransformationOption" relation="hasMany">
             <option name="label.name" value="label.options" />
@@ -140,6 +162,7 @@
         <option name="behaviour.date" value="true" />
         <option name="behaviour.log" value="true" />
         <option name="behaviour.version" value="true" />
+        <option name="group" value="asset"/>
         <option name="json.api" value="image-transformations" />
         <option name="order.field" value="name" />
         <option name="scaffold.controller" value="ride\web\base\controller\ImageTransformationController" />
@@ -148,11 +171,13 @@
     <model name="ImageTransformationOption">
         <field name="transformation" model="ImageTransformation" relation="belongsTo">
             <option name="label.name" value="label.transformation" />
-            <validation name="required" />
+            <validator name="required" />
         </field>
         <field name="key" type="string">
             <option name="label.name" value="label.key" />
-            <validation name="required" />
+            <filter name="trim" />
+            <filter name="stripTags" />
+            <validator name="required" />
         </field>
         <field name="value" type="string">
             <option name="label.name" value="label.value" />
@@ -163,6 +188,7 @@
 
         <option name="behaviour.date" value="true" />
         <option name="behaviour.log" value="true" />
+        <option name="group" value="asset"/>
         <option name="json.api" value="image-transformation-options" />
     </model>
 </models>

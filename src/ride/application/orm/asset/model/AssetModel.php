@@ -437,15 +437,15 @@ class AssetModel extends GenericModel {
                 $asset->setType(AssetEntry::TYPE_UNKNOWN);
             }
 
-            if (!$asset->getName()) {
+            if (!$asset->getName() && $this->useMediaProperty($media->getType(), 'name')) {
                 $asset->setName($media->getTitle());
             }
 
-            if (!$asset->getDescription()) {
+            if (!$asset->getDescription() && $this->useMediaProperty($media->getType(), 'description')) {
                 $asset->setDescription($media->getDescription());
             }
 
-            if ($media->getThumbnailUrl()) {
+            if ($media->getThumbnailUrl() && $this->useMediaProperty($media->getType(), 'thumbnail')) {
                 $client = $mediaFactory->getHttpClient();
                 $response = $client->get($media->getThumbnailUrl());
 
@@ -471,6 +471,17 @@ class AssetModel extends GenericModel {
                 $asset->setName($asset->getValue());
             }
         }
+    }
+
+    /**
+     * Checks if the provided property should be set through the obtained media
+     * object
+     * @param string $source Source of the media object
+     * @param string $property Name of the property
+     * @return boolean
+     */
+    protected function useMediaProperty($source, $property) {
+        return $this->getConfig()->get('asset.media.' . $source . '.' . $property, true);
     }
 
     /**
@@ -548,6 +559,14 @@ class AssetModel extends GenericModel {
      */
     public function getFileBrowser() {
         return $this->orm->getDependencyInjector()->get('ride\\library\\system\\file\\browser\\FileBrowser');
+    }
+
+    /**
+     * Gets the global config
+     * @return \ride\library\config\Config
+     */
+    public function getConfig() {
+        return $this->orm->getDependencyInjector()->get('ride\\library\\config\\Config');
     }
 
 }
