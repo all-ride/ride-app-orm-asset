@@ -1,0 +1,1 @@
+asset.media.%source%.%property%         Flag to see if the asset library should use the set property(name, description, thumbnail) for the set source (youtube, vimeo, soundcloud, ...)
