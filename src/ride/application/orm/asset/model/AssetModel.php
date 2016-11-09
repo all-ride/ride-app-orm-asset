@@ -111,16 +111,27 @@ class AssetModel extends GenericModel {
         $query->setFetchUnlocalized($fetchUnlocalized);
         $query->addOrderBy('{orderIndex} ASC');
 
-        if (is_array($folder)) {
+        if (isset($filter['query'])) {
+            $query->addCondition('{name} LIKE %1% OR {description} LIKE %1%', '%' . $filter['query'] . '%');
+
+            if (is_array($folder)) {
+                $query->addCondition('{folder} IN %1%', $folder);
+            } elseif ($folder instanceof AssetFolderEntry) {
+                if ($folder->getId()) {
+                    $path = $folder->getPath();
+                    $query->addCondition('{folder.parent} = %1% OR {folder.parent} LIKE %2%', $path, $path . AssetFolderModel::PATH_SEPARATOR . '%');
+                }
+            } elseif ($folder) {
+                $query->addCondition('{folder} = %1%', $folder);
+            } else {
+                $query->addCondition('{folder} IS NULL');
+            }
+        } elseif (is_array($folder)) {
             $query->addCondition('{folder} IN %1%', $folder);
         } elseif (!$folder || !$folder->getId()) {
             $query->addCondition('{folder} IS NULL');
         } else {
             $query->addCondition('{folder} = %1%', $folder);
-        }
-
-        if (isset($filter['query'])) {
-            $query->addCondition('{name} LIKE %1% OR {description} LIKE %1%', '%' . $filter['query'] . '%');
         }
 
         if (isset($filter['type']) && $filter['type'] != 'all') {
