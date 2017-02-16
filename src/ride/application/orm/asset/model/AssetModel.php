@@ -179,10 +179,14 @@ class AssetModel extends GenericModel {
             return null;
         }
 
-        $image = $this->getImageFactory()->createImage();
-        $image->read($file);
+        try {
+            $image = $this->getImageFactory()->createImage();
+            $image->read($file);
 
-        return $image->getDimension();
+            return $image->getDimension();
+        } catch (ImageException $exception) {
+            return null;
+        }
     }
 
     /**
@@ -519,8 +523,17 @@ class AssetModel extends GenericModel {
         }
 
         if ($mediaType->isImage()) {
-            $asset->setType(AssetEntry::TYPE_IMAGE);
-            $asset->setThumbnail($asset->getValue());
+            try {
+                $file = $this->getFileBrowser()->getFile($asset->getValue());
+
+                $image = $this->getImageFactory()->createImage();
+                $image->read($file);
+
+                $asset->setType(AssetEntry::TYPE_IMAGE);
+                $asset->setThumbnail($asset->getValue());
+            } catch (ImageException $exception) {
+                $asset->setType(AssetEntry::TYPE_UNKNOWN);
+            }
         } elseif ($mediaType->isAudio()) {
             $asset->setType(AssetEntry::TYPE_AUDIO);
         } elseif ($mediaType->isVideo()) {
