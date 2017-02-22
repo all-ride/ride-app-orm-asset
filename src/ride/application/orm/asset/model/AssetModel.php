@@ -119,7 +119,7 @@ class AssetModel extends GenericModel {
             } elseif ($folder instanceof AssetFolderEntry) {
                 if ($folder->getId()) {
                     $path = $folder->getPath();
-                    $query->addCondition('{folder.parent} = %1% OR {folder.parent} LIKE %2%', $path, $path . AssetFolderModel::PATH_SEPARATOR . '%');
+                    $query->addCondition('{folder} = %1% OR {folder.parent} = %1% OR {folder.parent} LIKE %2%', $path, $path . AssetFolderModel::PATH_SEPARATOR . '%');
                 }
             } elseif ($folder) {
                 $query->addCondition('{folder} = %1%', $folder);
