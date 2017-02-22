@@ -1,3 +1,7 @@
+## [1.1.2] - 2017-02-22
+### Updated
+- Fixed search for assets directly within the current folder
+
 ## [1.1.1] - 2017-02-16
 ### Updated
 - Try to read images before assigning an image type, if not readable, use the unknown type
