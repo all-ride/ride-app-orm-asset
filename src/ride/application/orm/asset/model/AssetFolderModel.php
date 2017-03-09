@@ -277,7 +277,7 @@ class AssetFolderModel extends GenericModel {
         }
 
         if (isset($filter['query'])) {
-            $query->addCondition('{name} LIKE %1% OR {description} LIKE %1%', '%' . $filter['query'] . '%');
+            $query->addCondition('self.id IN (SELECT query.entry FROM AssetFolderLocalized query WHERE query.name LIKE %1% OR query.description LIKE %1%)', '%' . $filter['query'] . '%');
         }
 
         if (isset($filter['date']) && $filter['date'] != 'all') {

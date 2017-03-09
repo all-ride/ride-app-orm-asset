@@ -112,7 +112,9 @@ class AssetModel extends GenericModel {
         $query->addOrderBy('{orderIndex} ASC');
 
         if (isset($filter['query'])) {
-            $query->addCondition('{name} LIKE %1% OR {description} LIKE %1%', '%' . $filter['query'] . '%');
+            // Going around the ORM to use a subquery and query the localized table.
+            // This way we create a search which searches in all locales
+            $query->addCondition('self.id IN (SELECT query.entry FROM AssetLocalized query WHERE query.name LIKE %1% OR query.description LIKE %1%)', '%' . $filter['query'] . '%');
 
             if (is_array($folder)) {
                 $query->addCondition('{folder} IN %1%', $folder);

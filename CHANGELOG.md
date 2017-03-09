@@ -1,3 +1,7 @@
+## [1.2.0] - 2017-03-09
+### Updated
+- Search assets and folders in all locales
+
 ## [1.1.2] - 2017-02-22
 ### Updated
 - Fixed search for assets directly within the current folder
