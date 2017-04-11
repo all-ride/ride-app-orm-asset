@@ -49,13 +49,19 @@ class AssetFolderModel extends GenericModel {
      */
     const ORDER_RESYNC = 'resync';
 
-    public function getOptionList($locale = null, $fetchUnlocalized = null) {
+    public function getOptionList($locale = null, $fetchUnlocalized = null, AssetFolderEntry $parent = null) {
         $query = $this->createQuery($locale);
         if ($fetchUnlocalized != null) {
             $query->setFetchUnlocalized($fetchUnlocalized);
         }
 
         $query->addOrderBy('{parent} ASC, {orderIndex} ASC');
+
+        if ($parent && $parent->getId() != 0) {
+            $path = $parent->getPath();
+
+            $query->addCondition('{parent} = %1% OR {parent} LIKE %2%', $path, $path . self::PATH_SEPARATOR . '%');
+        }
 
         $folders = $query->query();
 
