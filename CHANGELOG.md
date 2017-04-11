@@ -1,3 +1,7 @@
+## [1.3.0] - 2017-04-11
+### Added
+- Added parent argument when retrieving folder option list
+
 ## [1.2.0] - 2017-03-09
 ### Updated
 - Search assets and folders in all locales
