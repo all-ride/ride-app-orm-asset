@@ -62,13 +62,19 @@ class AssetFolderModel extends GenericModel {
 
             $query->addCondition('{parent} = %1% OR {parent} LIKE %2%', $path, $path . self::PATH_SEPARATOR . '%');
         }
-
         $folders = $query->query();
 
-        return $this->createTree($folders, array());
+        $path = 0;
+        $offset = 0;
+        if ($parent) {
+            $path = $parent->getPath();
+            $offset = $parent->getLevel();
+        }
+
+        return $this->createTree($folders, array(), $path, $offset);
     }
 
-    protected function createTree($folders, $options, $path = 0) {
+    protected function createTree($folders, $options, $path = 0, $offset = 0) {
         foreach ($folders as $folderId => $folder) {
             $parent = $folder->getParent();
             if ($parent != $path) {
@@ -77,12 +83,12 @@ class AssetFolderModel extends GenericModel {
 
             $prefix = '';
             if ($path != null) {
-                $prefix = str_repeat('-- ', substr_count($path, self::PATH_SEPARATOR) + 1);
+                $prefix = str_repeat('-- ', substr_count($path, self::PATH_SEPARATOR) + 1 - $offset);
             }
 
             $options[$folderId] = $prefix . $folder->getName();
 
-            $options = $this->createTree($folders, $options, $folder->getPath());
+            $options = $this->createTree($folders, $options, $folder->getPath(), $offset);
         }
 
         return $options;
@@ -324,13 +330,14 @@ class AssetFolderModel extends GenericModel {
      * Gets the breadcrumbs for the provided folder
      * @param \ride\application\orm\asset\entry\AssetFolderEntry $folder Folder
      * to get the breadcrumbs for
+     * @param \ride\application\orm\asset\entry\AssetFolderEntry $chroot Chroot
      * @return array Array with the id of the folder as key and the name as
      * value
      */
-    public function getBreadcrumbs(AssetFolderEntry $folder = null) {
+    public function getBreadcrumbs(AssetFolderEntry $folder = null, AssetFolderEntry $chroot = null) {
         $folders = array();
 
-        while ($folder && $folder->getId()) {
+        while ($folder && $folder->getId() && ($chroot && $chroot->getId() != $folder->getId())) {
             $folders[$folder->getId()] = $folder->getName();
 
             $parentFolderId = $folder->getParentFolderId();

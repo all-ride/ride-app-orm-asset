@@ -1,3 +1,10 @@
+## [1.3.1] - 2017-04-12
+### Added
+- added optional chroot parameter for the getBreadcrumbs method
+### Updated
+- fixed getOptionList when a parent is provided
+- fixed hasParentFolder method on a proxy instance
+
 ## [1.3.0] - 2017-04-11
 ### Added
 - Added parent argument when retrieving folder option list
