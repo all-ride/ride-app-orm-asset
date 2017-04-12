@@ -111,6 +111,13 @@
             <filter name="stripTags" />
             <validator name="required" />
         </field>
+        <field name="displayName" type="string" localized="true">
+            <option name="label.name" value="label.name.display" />
+            <option name="scaffold.order" value="true" />
+            <option name="scaffold.search" value="true" />
+            <filter name="trim" />
+            <filter name="stripTags" />
+        </field>
         <field name="transformations" model="ImageTransformation" relation="hasMany" linkModel="ImageStyleTransformation" order="true">
             <option name="label.name" value="label.transformations" />
             <option name="scaffold.form.type" value="select" />
@@ -125,7 +132,8 @@
             <validator name="required"/>
         </field>
 
-        <format name="title">{name}</format>
+        <format name="title">{displayName}</format>
+        <format name="teaser">{slug}</format>
 
         <option name="behaviour.date" value="true" />
         <option name="behaviour.log" value="true" />

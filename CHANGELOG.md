@@ -1,3 +1,7 @@
+## [1.4.0] - 2017-04-12
+### Added
+- added display name to image styles
+
 ## [1.3.1] - 2017-04-12
 ### Added
 - added optional chroot parameter for the getBreadcrumbs method
