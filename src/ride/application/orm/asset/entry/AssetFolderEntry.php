@@ -78,7 +78,7 @@ class AssetFolderEntry extends OrmAssetFolderEntry {
      * @return boolean True if the provided folder is a parent, false otherwise
      */
     public function hasParentFolder(AssetFolderEntry $folder) {
-        $ids = explode(AssetFolderModel::PATH_SEPARATOR, $this->parent);
+        $ids = explode(AssetFolderModel::PATH_SEPARATOR, $this->getParent());
 
         return in_array($folder->getId(), $ids);
     }
