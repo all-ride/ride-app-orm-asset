@@ -189,7 +189,7 @@ class AssetEntry extends OrmAssetEntry {
         $assetStyles = $this->getStyles();
         foreach ($assetStyles as $assetStyle) {
             $style = $assetStyle->getStyle();
-            if ($style->getName() == $name || $style->getSlug() == $name) {
+            if ($style && ($style->getName() == $name || $style->getSlug() == $name)) {
                 return $assetStyle;
             }
         }

@@ -10,6 +10,27 @@ use ride\application\orm\entry\ImageStyleEntry as OrmImageStyleEntry;
 class ImageStyleEntry extends OrmImageStyleEntry {
 
     /**
+     * Gets a string representation of this image style
+     * @return string
+     */
+    public function __toString() {
+        return $this->getFriendlyName();
+    }
+
+    /**
+     * Gets a human friendly name of this image style
+     * @return string
+     */
+    public function getFriendlyName() {
+        $name = $this->getDisplayName();
+        if (!$name) {
+            $name = $this->getName();
+        }
+
+        return $name;
+    }
+
+    /**
      * Gets an array with transformation definition
      * @return array Array with the machine name of the transformation as key
      * and the an option array as value
