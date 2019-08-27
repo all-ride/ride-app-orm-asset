@@ -379,7 +379,6 @@ class AssetModel extends GenericModel {
         if (!$asset->getId() && !$asset->getOrderIndex()) {
             $asset->setOrderIndex($this->getNewOrderIndex($asset->getFolder()));
         }
-
         if (!$asset->isParsed() || !$asset->getName()) {
             $this->parseAsset($asset);
         }
