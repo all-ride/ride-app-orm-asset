@@ -101,6 +101,7 @@
         <option name="files.delete" value="true" />
         <option name="group" value="asset"/>
         <option name="json.api" value="asset-image-styles" />
+        <option name="json.api.adapter" value="asset-image-styles" />
     </model>
     <model name="ImageStyle" entryClass="ride\application\orm\asset\entry\ImageStyleEntry">
         <field name="name" type="string">
@@ -132,7 +133,7 @@
             <validator name="required"/>
         </field>
 
-        <format name="title">{displayName}</format>
+        <format name="title">{friendlyName}</format>
         <format name="teaser">{slug}</format>
 
         <option name="behaviour.date" value="true" />

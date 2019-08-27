@@ -1,3 +1,8 @@
+## [1.4.1] - 2019-08-27
+### Updated
+- use friendly name for title format
+- use asset image style resource adapter for json api
+
 ## [1.4.0] - 2017-04-12
 ### Added
 - added display name to image styles
