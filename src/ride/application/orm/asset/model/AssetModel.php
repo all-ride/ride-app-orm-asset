@@ -10,6 +10,7 @@ use ride\library\image\exception\ImageException;
 use ride\library\i18n\translator\Translator;
 use ride\library\media\exception\UnsupportedMediaException;
 use ride\library\orm\model\GenericModel;
+use ride\library\StringHelper;
 
 use \Exception;
 
@@ -470,12 +471,14 @@ class AssetModel extends GenericModel {
                     $extension = $this->getMimeService()->getExtensionForMediaType($mediaType);
 
                     $directory = $this->getDirectory();
-                    $file = $directory->getChild($media->getId() . '.' . $extension);
+
+                    $file = $directory->getChild(StringHelper::safeString($media->getId()) . '.' . $extension);
                     $file->write($response->getBody());
 
                     $file = $this->getFileBrowser()->getRelativeFile($file, true);
 
                     $asset->setThumbnail($file->getPath());
+                    $asset->setMime($mediaType);
                 }
             }
         } catch (UnsupportedMediaException $exception) {
