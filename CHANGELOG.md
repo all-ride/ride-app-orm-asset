@@ -1,3 +1,7 @@
+## [1.4.2] - 2019-10-03
+### Updated
+- fixed parsing of URL assets
+
 ## [1.4.1] - 2019-08-27
 ### Updated
 - use friendly name for title format
