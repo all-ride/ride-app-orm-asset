@@ -1,3 +1,7 @@
+## [1.4.4] - 2019-10-04
+### Updated
+- blind programming ... fixed syntax
+ 
 ## [1.4.3] - 2019-10-04
 ### Updated
 - follow redirect when parsing URL's 
