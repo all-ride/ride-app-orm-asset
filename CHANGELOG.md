@@ -1,3 +1,7 @@
+## [1.4.3] - 2019-10-04
+### Updated
+- follow redirect when parsing URL's 
+
 ## [1.4.2] - 2019-10-03
 ### Updated
 - fixed parsing of URL assets

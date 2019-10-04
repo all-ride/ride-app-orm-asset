@@ -464,22 +464,31 @@ class AssetModel extends GenericModel {
 
             if ($media->getThumbnailUrl() && $this->useMediaProperty($media->getType(), 'thumbnail')) {
                 $client = $mediaFactory->getHttpClient();
-                $response = $client->get($media->getThumbnailUrl());
 
-                if ($response->isOk()) {
-                    $mediaType = $response->getHeader(Header::HEADER_CONTENT_TYPE);
-                    $extension = $this->getMimeService()->getExtensionForMediaType($mediaType);
+                $url = $media->getThumbnailUrl();
+                $counter = 0;
 
-                    $directory = $this->getDirectory();
+                do {
+                    $response = $client->get($url);
+                    $counter++;
 
-                    $file = $directory->getChild(StringHelper::safeString($media->getId()) . '.' . $extension);
-                    $file->write($response->getBody());
+                    if ($response->isOk()) {
+                        $mediaType = $response->getHeader(Header::HEADER_CONTENT_TYPE);
+                        $extension = $this->getMimeService()->getExtensionForMediaType($mediaType);
 
-                    $file = $this->getFileBrowser()->getRelativeFile($file, true);
+                        $directory = $this->getDirectory();
 
-                    $asset->setThumbnail($file->getPath());
-                    $asset->setMime($mediaType);
-                }
+                        $file = $directory->getChild(StringHelper::safeString($media->getId()) . '.' . $extension);
+                        $file->write($response->getBody());
+
+                        $file = $this->getFileBrowser()->getRelativeFile($file, true);
+
+                        $asset->setThumbnail($file->getPath());
+                        $asset->setMime($mediaType);
+                    } elseif ($response->willRedirect()) {
+                        $url = $response->getLocation();
+                    }
+                } while ($respose->willRedirect() || $counter > 5);
             }
         } catch (UnsupportedMediaException $exception) {
             $asset->setSource(self::SOURCE_URL);
