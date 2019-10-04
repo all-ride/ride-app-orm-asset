@@ -467,7 +467,6 @@ class AssetModel extends GenericModel {
 
                 $url = $media->getThumbnailUrl();
                 $counter = 0;
-
                 do {
                     $response = $client->get($url);
                     $counter++;
@@ -488,7 +487,7 @@ class AssetModel extends GenericModel {
                     } elseif ($response->willRedirect()) {
                         $url = $response->getLocation();
                     }
-                } while ($respose->willRedirect() || $counter > 5);
+                } while ($response->willRedirect() || $counter > 5);
             }
         } catch (UnsupportedMediaException $exception) {
             $asset->setSource(self::SOURCE_URL);
