@@ -1,3 +1,6 @@
+## [1.5] - 2023-08-24
+### Updated
+- Changed deprecated strftime to date 
 ## [1.4.4] - 2019-10-04
 ### Updated
 - blind programming ... fixed syntax

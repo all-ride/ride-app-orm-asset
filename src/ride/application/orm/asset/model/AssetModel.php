@@ -231,7 +231,8 @@ class AssetModel extends GenericModel {
         foreach ($months as $key => $null) {
             list($year, $month) = explode('-', $key);
 
-            $months[$key] = strftime('%B %Y', mktime(12, 0, 0, $month, 1, $year));
+            //$months[$key] = strftime('%B %Y', mktime(12, 0, 0, $month, 1, $year));
+            $months[$key] = date('F Y', mktime(12, 0, 0, $month, 1, $year));
         }
 
         return $months;
