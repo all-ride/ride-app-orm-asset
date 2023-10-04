@@ -16,31 +16,31 @@ class AssetEntry extends OrmAssetEntry {
      * Audio type
      * @var string
      */
-    const TYPE_AUDIO = 'audio';
+    final public const TYPE_AUDIO = 'audio';
 
     /**
      * document type
      * @var string
      */
-    const TYPE_DOCUMENT = 'document';
+    final public const TYPE_DOCUMENT = 'document';
 
     /**
      * Image type
      * @var string
      */
-    const TYPE_IMAGE = 'image';
+    final public const TYPE_IMAGE = 'image';
 
     /**
      * Unknown type
      * @var string
      */
-    const TYPE_UNKNOWN = 'unknown';
+    final public const TYPE_UNKNOWN = 'unknown';
 
     /**
      * Video type
      * @var string
      */
-    const TYPE_VIDEO = 'video';
+    final public const TYPE_VIDEO = 'video';
 
     /**
      * Flag to see if the media of this asset has been parsed
@@ -53,7 +53,7 @@ class AssetEntry extends OrmAssetEntry {
      * return boolean
      */
     public function isUrl() {
-        return StringHelper::startsWith($this->getValue(), array('http://', 'https://'));
+        return StringHelper::startsWith($this->getValue(), ['http://', 'https://']);
     }
 
     /**
